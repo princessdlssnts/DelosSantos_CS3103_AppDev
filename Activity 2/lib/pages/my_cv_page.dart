@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
 import 'cv_sections_page.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class MyCVPage extends StatelessWidget {
+class MyCVPage extends StatefulWidget {
+  @override
+  _MyCVPageState createState() => _MyCVPageState();
+}
+
+class _MyCVPageState extends State<MyCVPage> {
+  String? _selectedImagePath;
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImagePath = pickedFile.path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,44 +69,66 @@ class MyCVPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 200,
-              color: Colors.blue,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                      "https://picture_icon.jpg", // Replace with your profile picture URL or AssetImage
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Princess Mae Delos Santos",
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Text(
-                    "@princessdlssnts",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
-                  ),
-                  const Text(
-                    "Philippines",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                    ),
+                  Column(
+                    children: [
+                      ClipOval(
+                        child: _selectedImagePath != null
+                            ? Image.file(
+                                File(_selectedImagePath!),
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'lib/assets/picture_icon.jpg',
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          radius: 20,
+                          child: const Icon(Icons.camera_alt, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 10),
+            const Text(
+              "Princess Mae Delos Santos",
+              style: TextStyle(
+                fontSize: 22,
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "@princessdlssnts",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(179, 8, 7, 7),
+              ),
+            ),
+            const Text(
+              "Lian, Philippines",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(179, 4, 4, 4),
+              ),
+            ),
+            const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Row(
@@ -116,39 +158,27 @@ class MyCVPage extends StatelessWidget {
                       Text("Followers"),
                     ],
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        "485",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text("Posts"),
-                    ],
-                  ),
                 ],
               ),
             ),
-            Card(
-              margin: const EdgeInsets.all(16),
+            const Card(
+              margin: EdgeInsets.all(16),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            "picture_icon.jpg", // Replace with the profile image URL
+                          backgroundImage: AssetImage(
+                            "lib/assets/picture_icon.jpg",
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               "Princess Mae Delos Santos",
                               style: TextStyle(
@@ -167,8 +197,8 @@ class MyCVPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
+                    SizedBox(height: 10),
+                    Text(
                       "To create innovative and user-centered web designs that enhance user experiences and contribute to the development of accessible, visually engaging, and responsive frontend solutions.",
                       style: TextStyle(fontSize: 14),
                     ),
